@@ -9,8 +9,8 @@ public sealed class UICamera : MonoBehaviour {
 
 	//private static UICamera instance;
 
-	const float MINIMUM_WIDTH = 1024;
-	const float MINIMUM_HEIGHT = 768;
+	const float MINIMUM_WIDTH = 640;
+	const float MINIMUM_HEIGHT = 1136;
 	const float ASPECT_RATIO = MINIMUM_WIDTH / MINIMUM_HEIGHT;
 	const float STANDARD_HEIGHT = 480;
 	
