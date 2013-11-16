@@ -1,0 +1,5 @@
+
+/login.php I:(username, password) O:(id_u) - user id
+/login.merchant.php I:(id_u) O:(id_mi) - merchant id
+/register.php I:(username,email,password) O:(id_u) - user id
+/register.merchant.php I:(idu_mi,info,icon) O:(id_mi) - merchant id
