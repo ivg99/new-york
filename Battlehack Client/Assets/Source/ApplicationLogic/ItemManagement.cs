@@ -10,7 +10,8 @@ public class ItemManagement : MonoBehaviour {
 			return instance;
 		}
 	}
-
+	System.Globalization.NumberStyles style = System.Globalization.NumberStyles.Any;
+	System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 	private Dictionary<int, ItemEntityLoader> localItemStore = new Dictionary<int, ItemEntityLoader>();
 
 	//Editor debug purposes, so we can debug issues in the editos
@@ -109,7 +110,7 @@ public class ItemManagement : MonoBehaviour {
 				ParseParam(out p.scale_x, out p.scale_x_min,ob.GetField("scale_x").str,
 						   out p.scale_x_max,ob.GetField("scale_x1").str);
 	
-				ParseParam(out p.scale_y, out p.rotate_y_min,ob.GetField("scale_y").str,
+				ParseParam(out p.scale_y, out p.scale_y_min,ob.GetField("scale_y").str,
 						   out p.scale_y_max,ob.GetField("scale_y1").str);
 
 				ParseParam(out p.scale_z, out p.scale_z_min,ob.GetField("scale_z").str,
@@ -145,13 +146,14 @@ public class ItemManagement : MonoBehaviour {
 	}
 
 	void ParseParam(out bool inUse, out float min, string mindata,out float max, string maxdata ){
-		bool success1 = false;
-		success1 = System.Single.TryParse(mindata, out min);
+		bool success1 = false;//
+		success1 = System.Single.TryParse(mindata,style, culture, out min);
 
 		bool success2 = false;
-		success2 = System.Single.TryParse(maxdata, out max);
+		success2 = System.Single.TryParse(maxdata,style, culture, out max);
 
 		if(success1 && success2){
+			// Debug.Log(min + " : " +  max);
 			inUse = true;
 		}
 		else{

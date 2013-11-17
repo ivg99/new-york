@@ -65,5 +65,8 @@ public class ItemEntity  {
 	public int Price{
 		get{ return price; }
 	}
+	public List<ItemParameter> Parameters{
+		get{ return parameters;}
+	}
 }
 

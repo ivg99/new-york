@@ -3,15 +3,15 @@ using System.Collections;
 
 public class HomeScreen : ApplicationScreen {
 
-	public override void Activate(bool immediate){
-		base.Activate(immediate);
+	public override void Activate(bool immediate, int startPoint){
+		base.Activate(immediate,startPoint);
 		gameObject.SetActive(true);
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(0, 0);
 		}
 		else{
 			time = 0;
-			xStart = 1;
+			xStart = startPoint;
 			xTarget = 0;
 			animating = true;
 			activating = true;
@@ -19,9 +19,9 @@ public class HomeScreen : ApplicationScreen {
 		
 	}
 
-	public override void Deactivate(bool immediate){
+	public override void Deactivate(bool immediate,int endPoint){
 
-		base.Deactivate(immediate);
+		base.Deactivate(immediate,endPoint);
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(1, 0);
 			gameObject.SetActive(false);
@@ -29,7 +29,7 @@ public class HomeScreen : ApplicationScreen {
 		else{
 			time = 0;
 			xStart = 0;
-			xTarget = -1;
+			xTarget = endPoint;
 			animating = true;
 			activating = false;
 		}
@@ -54,7 +54,7 @@ public class HomeScreen : ApplicationScreen {
 
 	void Update(){
 		if(animating){
-			time = Mathf.Clamp01(Time.deltaTime + time);
+			time = Mathf.Clamp01(2f*Time.deltaTime + time);
 			float val = Smoothing.QuinticEaseOut(time);
 			val = val*xTarget + (1-val)*xStart;
 			uiTransform.RelativePosition = new Vector2(val, 0);
@@ -74,7 +74,7 @@ public class HomeScreen : ApplicationScreen {
 	 void ScanComplete(int idx){
 		ScanNormal();
 		#if UNITY_EDITOR
-			LoadItem(1);
+			LoadItem(63);
 		#else
 			EasyCodeScanner.launchScanner( true, "Scanning...", -1, true);
 		#endif

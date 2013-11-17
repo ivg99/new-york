@@ -12,38 +12,48 @@ public class StateMachine : MonoBehaviour {
 	[SerializeField] ApplicationScreen homeScreen;
 	[SerializeField] ItemScreen itemScreen;
 	[SerializeField] ApplicationScreen loginScreen;
-
+	[SerializeField] CheckoutScreen checkoutScreen;
 	void Awake(){
 		instance = this;
 		
 	}
 
 	void Start(){
-		GotoHomeScreen(true);
+		GotoHomeScreen(1, true);
 	}
 
 	public void LoadItem(int itemID){
 		ItemManagement.Instance.GetItem(itemID);
 		itemScreen.SetItem(itemID);
-		GotoItemScreen();
+		GotoItemScreen(1);
 	}
 
-	void GotoItemScreen(bool immediate = false){
-		itemScreen.Activate(immediate);
-		loginScreen.Deactivate(immediate);
-		homeScreen.Deactivate(immediate);
+	public void GotoItemScreen(int direction, bool immediate = false){
+		itemScreen.Activate(immediate, direction);
+		loginScreen.Deactivate(immediate,-direction);
+		homeScreen.Deactivate(immediate,-direction);
+		checkoutScreen.Deactivate(immediate,-direction);
 	}
 
-	void GotoHomeScreen(bool immediate = false){
-		itemScreen.Deactivate(immediate);
-		loginScreen.Deactivate(immediate);
-		homeScreen.Activate(immediate);
+	public void GotoHomeScreen(int direction,bool immediate = false){
+		itemScreen.Deactivate(immediate,-direction);
+		loginScreen.Deactivate(immediate,-direction);
+		homeScreen.Activate(immediate,direction);
+		checkoutScreen.Deactivate(immediate,-direction);
 	}
 
-	void GotoLoginScreen(bool immediate = false){
-		itemScreen.Deactivate(immediate);
-		loginScreen.Activate(immediate);
-		homeScreen.Deactivate(immediate);
+	void GotoLoginScreen(int direction,bool immediate = false){
+		itemScreen.Deactivate(immediate,-direction);
+		loginScreen.Activate(immediate, direction);
+		homeScreen.Deactivate(immediate,-direction);
+		checkoutScreen.Deactivate(immediate,-direction);
+	}
+
+	public void Checkout(int direction,bool immediate = false){
+		itemScreen.Deactivate(immediate,-direction);
+		loginScreen.Deactivate(immediate,-direction);
+		homeScreen.Deactivate(immediate,-direction);
+		checkoutScreen.Activate(immediate,direction);
 	}
 
 

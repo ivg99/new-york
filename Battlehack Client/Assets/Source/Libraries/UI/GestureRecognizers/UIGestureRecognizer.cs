@@ -258,7 +258,7 @@ public abstract class UIGestureRecognizer : MonoBehaviour {
 
 		if(activeGesture != null){
 			activeGesture.Sample();
-			if(activeGesture.state == GestureState.Possible || activeGesture.state == GestureState.Failed || activeGesture.state == GestureState.Canceled){
+			if(activeGesture.state == GestureState.Possible || activeGesture.state == GestureState.Failed || activeGesture.state == GestureState.Canceled ||activeGesture.state == GestureState.None){
 				
 				activeGesture = null;
 			}
@@ -302,6 +302,7 @@ public abstract class UIGestureRecognizer : MonoBehaviour {
 		for(int i=0; i<recognizers.Count; i++){
 
 			if(activeGesture != null && activeGesture != recognizers[i] && !recognizers[i].AllowSimultaneousRecognition){
+				// Debug.Log(activeGesture);
 				recognizers[i].OverrideGesture();
 			}
 
