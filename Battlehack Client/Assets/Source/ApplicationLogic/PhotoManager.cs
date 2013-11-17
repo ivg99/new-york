@@ -9,7 +9,9 @@ public class PhotoManager : MonoBehaviour {
 		}
 	}
 
-
+	public const int LARGE_IMAGE_SIZE = 256;
+	public const int THUMBNAIL_IMAGE_SIZE = 64;
+	
 	private ImageByID[] imageCache = new ImageByID[10];
 	private int idx = 0;
 
@@ -21,7 +23,7 @@ public class PhotoManager : MonoBehaviour {
 	}
 
 
-	public void LoadImage(int id, string url){
+	public void LoadImage(int id, string url, int size){
 
 
 		ImageByID image = imageCache[idx];
@@ -30,6 +32,7 @@ public class PhotoManager : MonoBehaviour {
 		}
 		image.id = id;
 		image.url = url;
+		image.textureSize = size;
 		StartCoroutine(LoadImage(image));
 
 
@@ -37,7 +40,13 @@ public class PhotoManager : MonoBehaviour {
 	}
 
 	IEnumerator LoadImage(ImageByID image){
-		WWW www = new WWW(image.url);
+
+		WWWForm imageForm = new WWWForm();
+		imageForm.AddField("textureSize", image.textureSize);
+		imageForm.AddField("submitted", 1);
+		WWW www = new WWW( image.url, imageForm );
+
+		
         yield return www;
         if(www.error != null){
 			Debug.LogError("ERROR ON PHOTO LOAD: "+ www.error);
@@ -68,6 +77,7 @@ public class PhotoManager : MonoBehaviour {
 [System.Serializable]
 public class ImageByID{
 	public int id;
+	public int textureSize;
 	public string url;
 	public Texture2D texture;
 }

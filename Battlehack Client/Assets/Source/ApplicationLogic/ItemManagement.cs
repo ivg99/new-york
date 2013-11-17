@@ -47,7 +47,7 @@ public class ItemManagement : MonoBehaviour {
 			string merchantName = j.GetField("storename").str;
 			string name = j.GetField("name").str;
 			string description = j.GetField("description").str;
-			string photoURL = WWW.UnEscapeURL(j.GetField("photo").str);
+			string photoURL = (j.GetField("photo").str);
 			string modelURL = j.GetField("model").str;
 			string price = j.GetField("price").str;
 
@@ -57,7 +57,7 @@ public class ItemManagement : MonoBehaviour {
 			int intPrice = (int)(100*floatPrice);
 
 			Debug.Log(photoURL);
-			PhotoManager.Instance.LoadImage(intId, photoURL);
+			PhotoManager.Instance.LoadImage(intId, photoURL, PhotoManager.LARGE_IMAGE_SIZE);
 
 			ItemEntity item = new ItemEntity(
 				intId, name, description, photoURL, modelURL, intPrice, intMerchantID, merchantName
