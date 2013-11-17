@@ -12,10 +12,19 @@ mysql_select_db($db);
 
 require_once('libs/fn_mysql.php');
 
-function row2json($row){
+function row2json($checkthis,$row){
 	$json = array();
 	foreach($row as $key=>$val){
 		$json[$key]=$val;
 	}
 	return stripslashes(json_encode($json)); 
 }
+
+/*
+ * 	foreach($row as $key=>$val){
+		if($key==$checkthis)
+			if($val!='')
+				$json[$key]=$val;
+			else return '';
+	}
+ */

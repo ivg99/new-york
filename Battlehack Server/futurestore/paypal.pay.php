@@ -44,7 +44,12 @@ for($i=0;$i<count($transactions);$i++){
 	$resources = $transactions[$i]->related_resources;
 	for($j=0;$j<count($resources);$j++){
 		$state = $resources[$j]->sale->state;
-		if($state=='completed')die('success');
+		if($state=='completed'){
+			$json['status'] = 'success';
+			$json['id'] = $resources[$j]->sale->id;
+			$jsonspew = json_encode($json);
+			die($jsonspew);
+		}
 	}
 }
 

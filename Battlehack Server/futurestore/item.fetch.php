@@ -6,7 +6,7 @@ if($id_i>0){
 	$result = mysql_query($query);
 	//$jsons = array();
 	while($row = mysql_fetch_assoc($result)){
-		$json = row2json($row);
+		$json = row2json('name',$row);
 	}
 	$arrjson = json_decode($json);
 

@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteBase /
+RewriteRule ^create/$ /create.product.php?path=create [L]
+RewriteRule ^create$ /create.product.php?path=create [L]
+RewriteRule ^login/$ /login.php?path=login [L]
+RewriteRule ^login$ /login.php?path=login [L]
+RewriteRule ^Logout/$ /logout.php?path=login [L]
+RewriteRule ^Logout$ /logout.php?path=login [L]
+RewriteRule ^registermerchant/$ /register.merchant.php?path=registermerchant [L]
+RewriteRule ^registermerchant$ /register.merchant.php?path=registermerchant [L]
+RewriteRule ^register/$ /register.php?path=register [L]
+RewriteRule ^register$ /register.php?path=register [L]
+RewriteRule ^dashboard/$ /dashboard.php?path=dashboard [L]
+RewriteRule ^dashboard$ /dashboard.php?path=dashboard [L]

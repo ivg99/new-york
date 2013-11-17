@@ -4,7 +4,8 @@
 if($submitted==1){
 	require_once('_conn.php');
 	
-	$id = quoty($_REQUEST['id']);
+	if($included==1)$id = quoty($id);
+	else $id = quoty($_REQUEST['id']);
 	
 	$query = "SELECT * FROM merchantinfo WHERE idu_mi=".$id;
 	$result = mysql_query($query);
@@ -16,9 +17,13 @@ if($submitted==1){
 	}
 	
 	if($id_mi>0){
+		if($included!=1){
 		$json['id_mi'] = $id_mi;
 		echo json_encode($json);
-	}else echo 'DNE';
+		}
+	}else{ if($included!=1)echo 'DNE';
+			else header('Location: /registermerchant');
+	}
 	
 }else{
 ?>	

@@ -16,6 +16,6 @@
 /cc.issuer.php I:(cc#) o:(issuer - examples: VISA, MasterCard, Discover, AmEx) 
 /paypal.vault.add.php I:(type,number,expire_month,expire_year,first_name,last_name) o:(json - error_count:0,id_cc OR error_count:>0,errors: string array)
 /paypal.vault.lookup.php I:(ccid) O: expired or ok
-/paypal.pay.php I:(ccid,price) O:success
+/paypal.pay.php I:(ccid,price) O:(status,id)
 
 
