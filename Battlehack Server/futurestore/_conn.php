@@ -11,3 +11,11 @@ $c0nn=$conn;
 mysql_select_db($db);
 
 require_once('libs/fn_mysql.php');
+
+function row2json($row){
+	$json = array();
+	foreach($row as $key=>$val){
+		$json[$key]=$val;
+	}
+	return stripslashes(json_encode($json)); 
+}

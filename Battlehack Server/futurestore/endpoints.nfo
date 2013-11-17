@@ -7,3 +7,5 @@
 /item.add.php I:(name,photo,model,description,price) O:(id_i)
 /item.fetch.php I:(id_i) O:(everything in item.add input as json as well as id_i,idm_i)
 /item.meshupload.php I:(id_i,file as binary) O:(success) - updates file url in items
+
+/image.resizer.php I:(x,y,imageurl) O:(image url)
