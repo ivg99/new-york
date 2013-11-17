@@ -2,8 +2,13 @@
 if($submitted==1){
 	
 	require_once('_conn.php');
+
+	// generate thumbnails
+	require_once('image.resizer.php'); 
+	$photo_large = ResizeImage(256,256,$photo);
+	$photo_thumb = ResizeImage(64,64,$photo);
 	
-	$query = mins('items',array('name','photo','model','description','price'),array($name,$photo,$model,$description,$price));
+	$query = mins('items',array('name','photo','model','description','price','photo_large','photo_thumb'),array($name,$photo,$model,$description,$price,$photo_large,$photo_thumb));
 	mquery($query);
 	$id_i = mysql_insert_id();
 	
