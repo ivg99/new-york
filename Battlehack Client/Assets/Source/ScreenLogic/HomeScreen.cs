@@ -11,7 +11,7 @@ public class HomeScreen : ApplicationScreen {
 		}
 		else{
 			time = 0;
-			xStart = 1;
+			xStart = -1;
 			xTarget = 0;
 			animating = true;
 			activating = true;
@@ -54,7 +54,7 @@ public class HomeScreen : ApplicationScreen {
 
 	void Update(){
 		if(animating){
-			time = Mathf.Clamp01(Time.deltaTime + time);
+			time = Mathf.Clamp01(2f*Time.deltaTime + time);
 			float val = Smoothing.QuinticEaseOut(time);
 			val = val*xTarget + (1-val)*xStart;
 			uiTransform.RelativePosition = new Vector2(val, 0);
@@ -74,7 +74,7 @@ public class HomeScreen : ApplicationScreen {
 	 void ScanComplete(int idx){
 		ScanNormal();
 		#if UNITY_EDITOR
-			LoadItem(1);
+			LoadItem(9);
 		#else
 			EasyCodeScanner.launchScanner( true, "Scanning...", -1, true);
 		#endif

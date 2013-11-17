@@ -89,7 +89,7 @@ public class UITapGestureRecognizer : UIGestureRecognizer {
 	}
 	
 	protected override void OverrideGesture(){
-
+		// Debug.Log("huh?");
 	 	for(int i=0; i<keyDownInElement.Length; i++){
 			keyDownInElement[i] = false;
 		}

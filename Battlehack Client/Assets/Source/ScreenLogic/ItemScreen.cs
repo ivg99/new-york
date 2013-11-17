@@ -13,6 +13,7 @@ public class ItemScreen : ApplicationScreen {
 		}
 		else{
 			time = 0;
+			uiTransform.RelativePosition = new Vector2(1, 0);
 			xStart = 1;
 			xTarget = 0;
 			animating = true;
@@ -52,7 +53,10 @@ public class ItemScreen : ApplicationScreen {
 	bool animating = false;
 	bool activating = false;
 
+	[SerializeField] UITapGestureRecognizer back;
+	[SerializeField] UIScrollGestureRecognizer scroller;
 	[SerializeField] Camera customizerCamera;
+	[SerializeField] Transform cameraParent;
 	[SerializeField] UITextureNode touchArea;
 	[SerializeField] UITextNode title;
 	[SerializeField] UITextNode description;
@@ -63,6 +67,16 @@ public class ItemScreen : ApplicationScreen {
 	[SerializeField] UITextNode parameterTwo;
 	[SerializeField] UITextNode parameterThree;
 
+	[SerializeField] GameObject[] objCache;
+
+	int selectedParameter = 0;
+
+	float targetYaw;
+	float targetPitch;
+	float pitch;
+	float pitchVelocity;
+	float yaw;
+	float yawVelocity;
 
 	int item = 0;
 	ItemEntity entity;
@@ -70,6 +84,25 @@ public class ItemScreen : ApplicationScreen {
 		icon.Texture = null;
 		this.item = item;
 		entity = null;
+		selectedParameter = 0;
+	}
+
+	void Start(){
+		
+		back.OnGestureRecognized += Home;
+		scroller.OnGestureChanged += Scroll;
+	}
+
+	void Scroll(int idx){
+		targetYaw = (targetYaw + 0.4f*scroller.RawScrollAmount.x);
+		targetPitch = Mathf.Clamp(targetPitch + 0.3f*scroller.RawScrollAmount.y,-89,89);
+
+
+	}
+
+	void Home(int idx){
+		
+		StateMachine.Instance.GotoHomeScreen();
 
 	}
 
@@ -81,12 +114,38 @@ public class ItemScreen : ApplicationScreen {
 					DrawItem();
 				}
 			}
-			else if(icon.Texture == null){
-				icon.Texture = PhotoManager.Instance.GetImage(entity.Id);
+			else{
+
+				Ray ray = customizerCamera.ScreenPointToRay(Input.mousePosition);
+				 RaycastHit hit;
+			    if(Physics.Raycast(ray, out hit, 100)){
+			        string name = hit.collider.name;
+			        for(int i=0; i<entity.Parameters.Count; i++){
+			        	if(name == entity.Parameters[i].name){
+			        		if(i < 4){
+			        			selectedParameter = i;
+			        			if(objCache[entity.Id] != null){
+			        				SetObjectColors(objCache[entity.Id].transform);
+			        			}
+			        			// hit.collider.gameObject.renderer.material.color = new Color(1,1,0.5f,1);
+			        		}
+			        		
+			        		
+			        	}
+			        }
+			        
+			    }
+				 if(icon.Texture == null){
+					icon.Texture = PhotoManager.Instance.GetImage(entity.Id);
+				}
 			}
+
+			
+
+
 		}
 		if(animating){
-			time = Mathf.Clamp01(Time.deltaTime + time);
+			time = Mathf.Clamp01(2f*Time.deltaTime + time);
 			float val = Smoothing.QuinticEaseOut(time);
 			val = val*xTarget + (1-val)*xStart;
 			uiTransform.RelativePosition = new Vector2(val, 0);
@@ -98,35 +157,93 @@ public class ItemScreen : ApplicationScreen {
 				}
 			}
 		}
+		pitch = Smoothing.SpringSmooth(pitch, targetPitch, ref pitchVelocity, 0.2f, Time.deltaTime);
+		float tYaw = Mathf.DeltaAngle(yaw, targetYaw);
+		yaw = Smoothing.SpringSmooth(yaw, targetYaw, ref yawVelocity, 0.2f, Time.deltaTime);
+		cameraParent.rotation = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(pitch, Vector3.right);
 	}
-
+	Color baseColor = new Color(1,1,1,1);
+	Color selectColor = new Color(0.7f,0.68f,1,1);
+	void SetObjectColors(Transform trans){
+		foreach(Transform t in trans){
+			if(t.name == entity.Parameters[selectedParameter].name){
+				t.gameObject.renderer.material.color = selectColor;
+				// Debug.Log(t.name);
+			}
+			else{
+				// Debug.Log("norm" + t.name);
+				t.gameObject.renderer.material.color = baseColor;
+			}
+			SetObjectColors(t);
+		}
+	}
 
 	void DrawItem(){
 		title.Text = entity.Name;
 		description.Text = entity.Description;
 		merchant.Text = entity.MerchantName;
 		PhotoManager.Instance.LoadImage(entity.Id, entity.PhotoLargeURL);
+
+		//oh god haxxxxx
+		if(entity.Id < objCache.Length){
+			objCache[entity.Id].SetActive(true);
+		}
+		for(int i=0; i<objCache.Length; i++){
+			if(i != entity.Id){
+				if(objCache[i] != null){
+					objCache[i].SetActive(false);
+				}
+			}
+		}
+
+		for(int i=0; i<entity.Parameters.Count; i++){
+			if(i==0){
+				parameterOne.gameObject.SetActive(true);
+				parameterOne.Text = entity.Parameters[i].name;
+			}
+			else if(i==1){
+				parameterTwo.gameObject.SetActive(true);
+				parameterTwo.Text = entity.Parameters[i].name;
+			}
+			else if(i==2){
+				parameterThree.gameObject.SetActive(true);
+				parameterThree.Text = entity.Parameters[i].name;
+			}
+		}
+		if(entity.Parameters.Count < 3){
+			parameterThree.gameObject.SetActive(false);
+		}
+		if(entity.Parameters.Count < 2){
+			parameterTwo.gameObject.SetActive(false);
+		}
+		if(entity.Parameters.Count < 1){
+			parameterOne.gameObject.SetActive(false);
+		}
+		if(objCache[entity.Id] != null){
+			SetObjectColors(objCache[entity.Id].transform);
+		}
+		//StartCoroutine(LoadModel());
 		Debug.Log("hell yeah");
 
 		// StartCoroutine(GetParameters());
 	}
 
-	// IEnumerator GetParameters(){
-		
+	IEnumerator LoadModel(){
 
-	// 	WWWForm paramForm = new WWWForm();
-	// 	paramForm.AddField("id_i", entity.Id);
-	// 	paramForm.AddField("submitted", 1);
-	// 	WWW www = new WWW( PARAMETER_URL, paramForm );
-	// 	yield return www;
-	// 	if(www.error != null){
-	// 		Debug.Log("ERROR ON PARAMETERS: "+ www.error);
-	// 	}
-	// 	else{
-	// 		string encodedString = www.data;
-	// 		Debug.Log(encodedString + " : " + www.url + " : " + entity.Id);
-	// 		JSONObject j = new JSONObject(encodedString);
+		WWW www = new WWW( entity.ModelURL );
 
-	// 	}
-	// }
+        yield return www;
+        if(www.error != null){
+			Debug.LogError("ERROR ON MODEL LOAD: "+ www.error);
+		}
+		else{
+			///Debug.Log(www.data);
+			//yikes, we get obj data, but the parser is broken, so we'll hack it... :(
+
+
+		}
+
+		yield return 0;
+	}
+
 }

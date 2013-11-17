@@ -34,7 +34,7 @@ public class StateMachine : MonoBehaviour {
 		homeScreen.Deactivate(immediate);
 	}
 
-	void GotoHomeScreen(bool immediate = false){
+	public void GotoHomeScreen(bool immediate = false){
 		itemScreen.Deactivate(immediate);
 		loginScreen.Deactivate(immediate);
 		homeScreen.Activate(immediate);
