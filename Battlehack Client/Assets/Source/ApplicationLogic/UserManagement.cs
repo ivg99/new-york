@@ -9,12 +9,26 @@ public class UserManagement : MonoBehaviour {
 		}
 	}
 	
-	public enum LoginStatus{None, Connecting, LoggedIn, IncorrectPassword, UsernameNotFound};
+	public enum LoginStatus{None, LoggingIn, LoggedIn, IncorrectPassword, UsernameNotFound};
+
+	private LoginStatus loginStatus = LoginStatus.None;
+	public LoginStatus CurrentLoginStatus{
+		get{
+			return loginStatus;
+		}
+	}
 
 	private string cachedUsername;
 	private string cachedPassword;
 
-	private string userID;
+	private int userID;
+	///TODO: haaaaxxxx - we'll skip legit user authentication for now - the paypal side is still safe
+	public int UserID{
+		get{
+			return userID;
+		}
+	}
+
 
 	const string USERNAME_KEY = "USERNAME";
 	const string PASSWORD_KEY = "PASSWORD";
@@ -27,7 +41,8 @@ public class UserManagement : MonoBehaviour {
 
 		GetStoredInfo();
 
-		Login("alpha", "abcdefg");
+		// Login("alpha", "abcdefg");
+		CreateNewUser("birdimus3","123456","brian.kehrer@gmail.com");
 	}
 
 	void GetStoredInfo(){
@@ -67,7 +82,7 @@ public class UserManagement : MonoBehaviour {
 	}
 
 	IEnumerator PerformLogin(string username, string password){
-
+		loginStatus = LoginStatus.LoggingIn;
 		WWWForm loginForm = new WWWForm();
 		loginForm.AddField("username", username);
 		loginForm.AddField("password", password);
@@ -77,8 +92,21 @@ public class UserManagement : MonoBehaviour {
 		if(www.error != null){
 			Debug.Log("ERROR ON LOGIN: "+ www.error);
 		}
-		Debug.Log(www.data);
-
+		else{
+			string encodedString = www.data;
+			Debug.Log(encodedString);
+			JSONObject j = new JSONObject(encodedString);
+			// Debug.Log(j.list);
+			// Debug.Log(j.HasField("id_u"));
+			if(j.HasField("id_u")){
+				string uID = j.GetField("id_u").str;
+				
+				userID = int.Parse(uID);
+				Debug.Log("User "+ userID + " has logged In");
+				loginStatus = LoginStatus.LoggedIn;
+			}
+		}
+		
 		yield return 0;
 	}
 
@@ -92,9 +120,22 @@ public class UserManagement : MonoBehaviour {
 		WWW www = new WWW( REGISTER_URL, registerForm );
 		yield return www;
 		if(www.error != null){
-			Debug.Log("ERROR ON LOGIN: "+ www.error);
+			Debug.Log("ERROR ON REGISTRATION: "+ www.error);
 		}
-		Debug.Log(www.data);
+		else{
+			string encodedString = www.data;
+			Debug.Log(encodedString);
+			JSONObject j = new JSONObject(encodedString);
+			// Debug.Log(j.list);
+			// Debug.Log(j.HasField("id_u"));
+			if(j.HasField("id_u")){
+				string uID = j.GetField("id_u").str;
+				Debug.Log(uID);
+				userID = int.Parse(uID);
+				Debug.Log(userID + ": Registered and Logged In");
+				loginStatus = LoginStatus.LoggedIn;
+			}
+		}
 
 		yield return 0;
 	}
