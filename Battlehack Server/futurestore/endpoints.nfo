@@ -4,8 +4,11 @@
 /register.php I:(username,email,password) O:(id_u) - user id
 /register.merchant.php I:(idu_mi,info,icon) O:(id_mi) - merchant id
 
-/item.add.php I:(name,photo,model,description,price) O:(id_i)
+/item.add.php I:(name,photo,model,description,price,photo_large,photo_thumb) O:(id_i)
 /item.fetch.php I:(id_i) O:(everything in item.add input as json as well as id_i,idm_i)
 /item.meshupload.php I:(id_i,file as binary) O:(success) - updates file url in items
 
 /image.resizer.php I:(x,y,imageurl) O:(image url)
+
+/parameters.add.php I:(id_i,param_name,translate,rotate,scale,color) O:(id_p)
+/parameters.fetch.php I:id_i O:(json params)
