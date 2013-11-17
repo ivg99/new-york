@@ -80,7 +80,7 @@ var totalparams=1;
 	   $("#CreateMyProduct").click(function(){//alert("!");
 				/*			alert(
 			$(".eachparam").attr("param_id");			);*/
-				$("#formbody").html("<center><h1>SUCCESS!</h1></center>");
+				$("#formbody").html("<center><h1>SUCCESS! Try it out now:</h1> <hr /><img src=http://skillfullymade.com/qr9.png /></center>");
 	   });
 
 function getFileExtension(filename){
