@@ -10,12 +10,22 @@ public class StateMachine : MonoBehaviour {
 	}
 	
 	[SerializeField] ApplicationScreen homeScreen;
-	[SerializeField] ApplicationScreen itemScreen;
+	[SerializeField] ItemScreen itemScreen;
 	[SerializeField] ApplicationScreen loginScreen;
 
 	void Awake(){
 		instance = this;
+		
+	}
+
+	void Start(){
 		GotoHomeScreen(true);
+	}
+
+	public void LoadItem(int itemID){
+		ItemManagement.Instance.GetItem(itemID);
+		itemScreen.SetItem(itemID);
+		GotoItemScreen();
 	}
 
 	void GotoItemScreen(bool immediate = false){

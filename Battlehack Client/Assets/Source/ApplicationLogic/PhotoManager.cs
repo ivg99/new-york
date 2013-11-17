@@ -15,6 +15,18 @@ public class PhotoManager : MonoBehaviour {
 	private ImageByID[] imageCache = new ImageByID[10];
 	private int idx = 0;
 
+	public Texture2D GetImage(int idx){
+		for(int i=0; i<imageCache.Length; i++){
+			if(imageCache[i].id == idx){
+				if(imageCache[i].texture != null){
+					return imageCache[i].texture;
+				}
+			}
+		}
+		return null;
+	}
+
+
 	void Awake(){
 		instance = this;
 		for(int i=0; i<imageCache.Length; i++){
@@ -23,29 +35,29 @@ public class PhotoManager : MonoBehaviour {
 	}
 
 
-	public void LoadImage(int id, string url, int size){
+	public void LoadImage(int id, string url){
+
+		if(GetImage(id) == null){
+
+			ImageByID image = imageCache[idx];
+			if(image.texture != null){
+				Destroy(image.texture);
+				image.texture = null;
+			}
+			image.id = id;
+			image.url = url;
+			
+			StartCoroutine(LoadImage(image));
 
 
-		ImageByID image = imageCache[idx];
-		if(image.texture != null){
-			Destroy(image.texture);
+			idx = (idx +1)%imageCache.Length;
 		}
-		image.id = id;
-		image.url = url;
-		image.textureSize = size;
-		StartCoroutine(LoadImage(image));
-
-
-		idx = (idx +1)%imageCache.Length;
 	}
 
 
 	IEnumerator LoadImage(ImageByID image){
 
-		WWWForm imageForm = new WWWForm();
-		imageForm.AddField("textureSize", image.textureSize);
-		imageForm.AddField("submitted", 1);
-		WWW www = new WWW( image.url, imageForm );
+		WWW www = new WWW( image.url );
 
 		
         yield return www;
@@ -80,7 +92,7 @@ public class PhotoManager : MonoBehaviour {
 [System.Serializable]
 public class ImageByID{
 	public int id;
-	public int textureSize;
+	
 	public string url;
 	public Texture2D texture;
 }
