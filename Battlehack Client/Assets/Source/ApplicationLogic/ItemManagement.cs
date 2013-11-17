@@ -44,6 +44,7 @@ public class ItemManagement : MonoBehaviour {
 
 
 	IEnumerator GetItemData(int itemID, ItemEntityLoader loader){
+		Debug.Log(itemID);
 		WWWForm itemForm = new WWWForm();
 		itemForm.AddField("id_i", itemID);
 		itemForm.AddField("submitted", 1);
@@ -80,7 +81,7 @@ public class ItemManagement : MonoBehaviour {
 
 /** PHOTO DEBUG **/
 			//for(int i=0; i<100; i++){
-				PhotoManager.Instance.LoadImage(intId, photo_large, PhotoManager.LARGE_IMAGE_SIZE);
+				
 			//}
 
 

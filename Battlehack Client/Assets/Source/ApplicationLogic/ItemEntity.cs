@@ -38,7 +38,7 @@ public class ItemEntity  {
 
 	} 
 
-	public int ID{
+	public int Id{
 		get{ return id; }
 	}
 	public int MerchantID{
