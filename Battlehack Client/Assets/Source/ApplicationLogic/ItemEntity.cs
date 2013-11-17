@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 [System.Serializable]
 public class ItemEntity  {
 
@@ -13,7 +13,7 @@ public class ItemEntity  {
 	string photoThumbURL;
 	string modelURL;
 	int price;
-
+	List<ItemParameter> parameters;
 
 	public ItemEntity(int id, 
 				string name, 
@@ -23,8 +23,8 @@ public class ItemEntity  {
 				string modelURL, 
 				int price,
 				int merchantID, 
-				string merchantName
-				
+				string merchantName,
+				List<ItemParameter> parameters
 				){
 		this.id = id;
 		this.merchantID = merchantID;
@@ -35,7 +35,7 @@ public class ItemEntity  {
 		this.photoThumbURL = photoThumbURL;
 		this.modelURL = modelURL;
 		this.price = price;
-
+		this.parameters = parameters;
 	} 
 
 	public int Id{

@@ -44,6 +44,7 @@ public class ItemScreen : ApplicationScreen {
 	// 		r.y = 162 /1136f;
 	// 		customizerCamera.pixelRect = r;
 	// }
+	const string PARAMETER_URL = Config.BASE_URL+"/parameters.fetch.php";
 
 	float xStart;
 	float xTarget;
@@ -57,6 +58,11 @@ public class ItemScreen : ApplicationScreen {
 	[SerializeField] UITextNode description;
 	[SerializeField] UITextNode merchant;
 	[SerializeField] UITextureNode icon;
+
+	[SerializeField] UITextNode parameterOne;
+	[SerializeField] UITextNode parameterTwo;
+	[SerializeField] UITextNode parameterThree;
+
 
 	int item = 0;
 	ItemEntity entity;
@@ -101,5 +107,26 @@ public class ItemScreen : ApplicationScreen {
 		merchant.Text = entity.MerchantName;
 		PhotoManager.Instance.LoadImage(entity.Id, entity.PhotoLargeURL);
 		Debug.Log("hell yeah");
+
+		// StartCoroutine(GetParameters());
 	}
+
+	// IEnumerator GetParameters(){
+		
+
+	// 	WWWForm paramForm = new WWWForm();
+	// 	paramForm.AddField("id_i", entity.Id);
+	// 	paramForm.AddField("submitted", 1);
+	// 	WWW www = new WWW( PARAMETER_URL, paramForm );
+	// 	yield return www;
+	// 	if(www.error != null){
+	// 		Debug.Log("ERROR ON PARAMETERS: "+ www.error);
+	// 	}
+	// 	else{
+	// 		string encodedString = www.data;
+	// 		Debug.Log(encodedString + " : " + www.url + " : " + entity.Id);
+	// 		JSONObject j = new JSONObject(encodedString);
+
+	// 	}
+	// }
 }
