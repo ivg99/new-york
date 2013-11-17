@@ -2,7 +2,7 @@
 if($id_i>0){
 	require_once('_conn.php');
 	
-	$query = 'SELECT * FROM items WHERE id_i='.$id_i;
+	$query = 'SELECT * FROM items JOIN merchantinfo ON idmi_i = id_mi WHERE id_i='.$id_i ; //echo $query;
 	$result = mysql_query($query);
 	$jsons = array();
 	while($row = mysql_fetch_assoc($result)){global $jsons;
