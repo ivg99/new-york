@@ -11,21 +11,39 @@ public class ItemManagement : MonoBehaviour {
 		}
 	}
 
-	private Dictionary<int, ItemEntity> localItemStore = new Dictionary<int, ItemEntity>();
+	private Dictionary<int, ItemEntityLoader> localItemStore = new Dictionary<int, ItemEntityLoader>();
 
 	//Editor debug purposes, so we can debug issues in the editos
 	private List<ItemEntity> allItems = new List<ItemEntity>();
 
 	const string ITEM_URL = Config.BASE_URL + "/item.fetch.php";
 
-
-	void Awake(){
-		instance = this;
-		StartCoroutine(GetItemData(1));
+	public ItemEntity GetItem(int id){
+		if(localItemStore.ContainsKey(id)){
+			if( localItemStore[id].Loaded ){
+				return localItemStore[id].Entity;
+			}
+			else{
+				return null;
+			}
+			
+		}
+		else{
+			ItemEntityLoader loader = new ItemEntityLoader();
+			localItemStore.Add(id, loader);
+			StartCoroutine(GetItemData(id, loader));
+			return null;
+		}
 	}
 
 
-	IEnumerator GetItemData(int itemID){
+	void Awake(){
+		instance = this;
+		//GetItem(1);
+	}
+
+
+	IEnumerator GetItemData(int itemID, ItemEntityLoader loader){
 		WWWForm itemForm = new WWWForm();
 		itemForm.AddField("id_i", itemID);
 		itemForm.AddField("submitted", 1);
@@ -57,12 +75,19 @@ public class ItemManagement : MonoBehaviour {
 			int intPrice = (int)(100*floatPrice);
 
 			Debug.Log(photoURL);
-			PhotoManager.Instance.LoadImage(intId, photoURL, PhotoManager.LARGE_IMAGE_SIZE);
+
+
+/** PHOTO DEBUG **/
+			//for(int i=0; i<100; i++){
+				// PhotoManager.Instance.LoadImage(intId, photoURL, PhotoManager.LARGE_IMAGE_SIZE);
+			//}
+
+
 
 			ItemEntity item = new ItemEntity(
 				intId, name, description, photoURL, modelURL, intPrice, intMerchantID, merchantName
 			);
-			localItemStore.Add(intId, item);
+			loader.Entity = item; //localItemStore.Add(intId, item);
 			allItems.Add(item);
 			// Debug.Log(j.list);
 			// Debug.Log(j.HasField("id_u"));
@@ -78,5 +103,6 @@ public class ItemManagement : MonoBehaviour {
 
 		yield return 0;
 	}
-
 }
+
+
