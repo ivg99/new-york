@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ItemManagement : MonoBehaviour {
 
@@ -9,6 +10,9 @@ public class ItemManagement : MonoBehaviour {
 			return instance;
 		}
 	}
+
+	private Dictionary<int, ItemEntity> localItemStore = new Dictionary<int, ItemEntity>();
+
 
 	const string ITEM_URL = Config.BASE_URL + "/item.fetch.php";
 
@@ -32,6 +36,30 @@ public class ItemManagement : MonoBehaviour {
 			string encodedString = www.data;
 			Debug.Log(encodedString);
 			JSONObject j = new JSONObject(encodedString);
+
+
+	
+			//TODO: error checking, blah blah blah
+			string id = j.GetField("id_i").str;
+			string merchantID = j.GetField("idmi_i").str;
+			string merchantName = j.GetField("storename").str;
+			string name = j.GetField("name").str;
+			string description = j.GetField("description").str;
+			string photoURL = j.GetField("photo").str;
+			string modelURL = j.GetField("model").str;
+			string price = j.GetField("price").str;
+
+			int intId = System.Int32.Parse(id);
+			int intMerchantID = System.Int32.Parse(merchantID);
+			float floatPrice = System.Single.Parse(price);
+			int intPrice = (int)(100*floatPrice);
+
+
+
+			ItemEntity item = new ItemEntity(
+				intId, name, description, photoURL, modelURL, intPrice, intMerchantID, merchantName
+			);
+			localItemStore.Add(intId, item);
 			// Debug.Log(j.list);
 			// Debug.Log(j.HasField("id_u"));
 			//name,photo,model,description,price
