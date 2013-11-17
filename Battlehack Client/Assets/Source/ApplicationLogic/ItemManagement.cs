@@ -79,6 +79,44 @@ public class ItemManagement : MonoBehaviour {
 			Debug.Log(photo_large + " : " + photo_thumb);
 
 
+			List<ItemParameter> parameters = new List<ItemParameter>();
+			JSONObject parametersArray = j.GetField("parameters");
+			for(int i = 0; i < parametersArray.list.Count; i++){
+				ItemParameter p = new ItemParameter();
+				JSONObject ob = parametersArray.list[i];
+
+				p.name = ob.GetField("param_name").str;
+
+
+				ParseParam(out p.translate_x, out p.translate_x_min,ob.GetField("translate_x").str,
+						   out p.translate_x_max,ob.GetField("translate_x1").str);
+	
+				ParseParam(out p.translate_y, out p.translate_y_min,ob.GetField("translate_y").str,
+						   out p.translate_y_max,ob.GetField("translate_y1").str);
+
+				ParseParam(out p.translate_z, out p.translate_z_min,ob.GetField("translate_z").str,
+						   out p.translate_z_max,ob.GetField("translate_z1").str);
+
+				ParseParam(out p.rotate_x, out p.rotate_x_min,ob.GetField("rotate_x").str,
+						   out p.rotate_x_max,ob.GetField("rotate_x1").str);
+	
+				ParseParam(out p.rotate_y, out p.rotate_y_min,ob.GetField("rotate_y").str,
+						   out p.rotate_y_max,ob.GetField("rotate_y1").str);
+
+				ParseParam(out p.rotate_z, out p.rotate_z_min,ob.GetField("rotate_z").str,
+						   out p.rotate_z_max,ob.GetField("rotate_z1").str);
+
+				ParseParam(out p.scale_x, out p.scale_x_min,ob.GetField("scale_x").str,
+						   out p.scale_x_max,ob.GetField("scale_x1").str);
+	
+				ParseParam(out p.scale_y, out p.rotate_y_min,ob.GetField("scale_y").str,
+						   out p.scale_y_max,ob.GetField("scale_y1").str);
+
+				ParseParam(out p.scale_z, out p.scale_z_min,ob.GetField("scale_z").str,
+						   out p.scale_z_max,ob.GetField("scale_z1").str);
+				parameters.Add(p);
+				//Debug.Log(p.name);
+			}	
 /** PHOTO DEBUG **/
 			//for(int i=0; i<100; i++){
 				
@@ -87,7 +125,7 @@ public class ItemManagement : MonoBehaviour {
 
 
 			ItemEntity item = new ItemEntity(
-				intId, name, description, photo_large ,photo_thumb, modelURL, intPrice, intMerchantID, merchantName
+				intId, name, description, photo_large ,photo_thumb, modelURL, intPrice, intMerchantID, merchantName,parameters
 			);
 			loader.Entity = item; //localItemStore.Add(intId, item);
 			allItems.Add(item);
@@ -105,6 +143,23 @@ public class ItemManagement : MonoBehaviour {
 
 		yield return 0;
 	}
+
+	void ParseParam(out bool inUse, out float min, string mindata,out float max, string maxdata ){
+		bool success1 = false;
+		success1 = System.Single.TryParse(mindata, out min);
+
+		bool success2 = false;
+		success2 = System.Single.TryParse(maxdata, out max);
+
+		if(success1 && success2){
+			inUse = true;
+		}
+		else{
+			inUse = false;
+		}
+	}
+
+
 }
 
 
