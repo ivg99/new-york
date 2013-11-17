@@ -17,10 +17,14 @@ public class AttributeScroll : MonoBehaviour {
 
 	}
 
-	float value;
+	float val;
 	public float Value{
 		get{
-			return value;
+			return val;
+		}
+		set{
+			val = Mathf.Clamp01(value);
+			scrollButton.RelativePosition = new Vector2(val,0.5f);
 		}
 	}
 
@@ -37,8 +41,8 @@ public class AttributeScroll : MonoBehaviour {
 	void UpdateScroll(int idx){
 
 		float scrollPosition = scroll.InputPosition.x - startPos;
-		value = Mathf.Clamp01(initialPos + scrollPosition / scrollBar.WorldSize.x);
-		scrollButton.RelativePosition = new Vector2(value,0.5f);
+		val = Mathf.Clamp01(initialPos + scrollPosition / scrollBar.WorldSize.x);
+		scrollButton.RelativePosition = new Vector2(val,0.5f);
 
 
 	}

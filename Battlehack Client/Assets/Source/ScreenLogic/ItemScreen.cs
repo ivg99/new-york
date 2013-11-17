@@ -196,7 +196,60 @@ public class ItemScreen : ApplicationScreen {
 	}
 
 	void InitializeScrollers(){
-		
+		if(objCache[entity.Id] != null){
+			Transform t = GetSelectedParameter(objCache[entity.Id].transform);
+			if(t != null){
+			int idx =0;
+			//Vector3 position = t.position;
+			//Vector3 scale = t.localScale;
+			if(entity.Parameters[selectedParameter].translate_x){
+				
+				float range = entity.Parameters[selectedParameter].translate_x_max - entity.Parameters[selectedParameter].translate_x_min;
+				scrollers[idx].Value = (t.position.x - entity.Parameters[selectedParameter].translate_x_min)/range;
+				//custom[idx].Text = "Move X";
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].translate_y){
+				float range = entity.Parameters[selectedParameter].translate_y_max - entity.Parameters[selectedParameter].translate_y_min;
+				scrollers[idx].Value = (t.position.y - entity.Parameters[selectedParameter].translate_y_min)/range;
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].translate_z){
+				float range = entity.Parameters[selectedParameter].translate_z_max - entity.Parameters[selectedParameter].translate_z_min;
+				scrollers[idx].Value = (t.position.z - entity.Parameters[selectedParameter].translate_z_min)/range;
+				idx++;
+			}
+
+			if(entity.Parameters[selectedParameter].rotate_x){
+				//custom[idx].Text = "Rotate X";
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].rotate_y){
+				//custom[idx].Text = "Rotate Y";
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].rotate_z){
+				//custom[idx].Text = "Rotate Z";
+				idx++;
+			}
+
+			if(entity.Parameters[selectedParameter].scale_x){
+				float range = entity.Parameters[selectedParameter].scale_x_max - entity.Parameters[selectedParameter].scale_x_min;
+				scrollers[idx].Value = (t.localScale.x - entity.Parameters[selectedParameter].scale_x_min)/range;
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].scale_y){
+				float range = entity.Parameters[selectedParameter].scale_y_max - entity.Parameters[selectedParameter].scale_y_min;
+				scrollers[idx].Value = (t.localScale.y - entity.Parameters[selectedParameter].scale_y_min)/range;
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].scale_z){
+				float range = entity.Parameters[selectedParameter].scale_z_max - entity.Parameters[selectedParameter].scale_z_min;
+				scrollers[idx].Value = (t.localScale.z - entity.Parameters[selectedParameter].scale_z_min)/range;
+				idx++;
+			}
+		}
+		}
 	}
 
 	void UpdateScrollers(){
@@ -290,6 +343,7 @@ public class ItemScreen : ApplicationScreen {
 			SetObjectColors(t);
 		}
 		SetupSliders();
+		InitializeScrollers();
 	}
 
 	void SetupSliders(){
