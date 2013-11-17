@@ -65,7 +65,8 @@ public class ItemManagement : MonoBehaviour {
 			string merchantName = j.GetField("storename").str;
 			string name = j.GetField("name").str;
 			string description = j.GetField("description").str;
-			string photoURL = (j.GetField("photo").str);
+			string photo_large = (j.GetField("photo_large").str);
+			string photo_thumb = (j.GetField("photo_thumb").str);
 			string modelURL = j.GetField("model").str;
 			string price = j.GetField("price").str;
 
@@ -74,18 +75,18 @@ public class ItemManagement : MonoBehaviour {
 			float floatPrice = System.Single.Parse(price);
 			int intPrice = (int)(100*floatPrice);
 
-			Debug.Log(photoURL);
+			Debug.Log(photo_large + " : " + photo_thumb);
 
 
 /** PHOTO DEBUG **/
 			//for(int i=0; i<100; i++){
-				// PhotoManager.Instance.LoadImage(intId, photoURL, PhotoManager.LARGE_IMAGE_SIZE);
+				PhotoManager.Instance.LoadImage(intId, photo_large, PhotoManager.LARGE_IMAGE_SIZE);
 			//}
 
 
 
 			ItemEntity item = new ItemEntity(
-				intId, name, description, photoURL, modelURL, intPrice, intMerchantID, merchantName
+				intId, name, description, photo_large ,photo_thumb, modelURL, intPrice, intMerchantID, merchantName
 			);
 			loader.Entity = item; //localItemStore.Add(intId, item);
 			allItems.Add(item);

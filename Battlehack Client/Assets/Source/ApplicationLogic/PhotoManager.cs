@@ -11,7 +11,7 @@ public class PhotoManager : MonoBehaviour {
 
 	public const int LARGE_IMAGE_SIZE = 256;
 	public const int THUMBNAIL_IMAGE_SIZE = 64;
-	
+
 	private ImageByID[] imageCache = new ImageByID[10];
 	private int idx = 0;
 
@@ -38,6 +38,7 @@ public class PhotoManager : MonoBehaviour {
 
 		idx = (idx +1)%imageCache.Length;
 	}
+
 
 	IEnumerator LoadImage(ImageByID image){
 
@@ -70,6 +71,8 @@ public class PhotoManager : MonoBehaviour {
 
 		yield return 0;
 	}
+
+
 
 }
 

@@ -9,7 +9,8 @@ public class ItemEntity  {
 	string merchantName;
 	string name;
 	string description;
-	string photoURL;
+	string photoLargeURL;
+	string photoThumbURL;
 	string modelURL;
 	int price;
 
@@ -17,7 +18,8 @@ public class ItemEntity  {
 	public ItemEntity(int id, 
 				string name, 
 				string description, 
-				string photoURL, 
+				string photoLargeURL, 
+				string photoThumbURL, 
 				string modelURL, 
 				int price,
 				int merchantID, 
@@ -29,7 +31,8 @@ public class ItemEntity  {
 		this.merchantName = merchantName;
 		this.name = name;
 		this.description = description;
-		this.photoURL = photoURL;
+		this.photoLargeURL = photoLargeURL;
+		this.photoThumbURL = photoThumbURL;
 		this.modelURL = modelURL;
 		this.price = price;
 
@@ -50,8 +53,11 @@ public class ItemEntity  {
 	public string Description{
 		get{ return description; }
 	}
-	public string PhotoURL{
-		get{ return photoURL; }
+	public string PhotoLargeURL{
+		get{ return photoLargeURL; }
+	}
+	public string PhotoThumbURL{
+		get{ return photoThumbURL; }
 	}
 	public string ModelURL{
 		get{ return modelURL; }

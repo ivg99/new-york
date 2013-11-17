@@ -3,8 +3,14 @@ using System.Collections;
 
 public abstract class ApplicationScreen : MonoBehaviour {
 
-	[SerializeField] UITransformNode uiTransform;
+	[SerializeField] protected UITransformNode uiTransform;
 
-	public abstract void Activate();
-	public abstract void Deactivate();
+	public virtual void Activate(bool immediate){
+		activated = true;
+	}
+	public virtual void Deactivate(bool immediate){
+		activated = false;
+	}
+
+	protected bool activated;
 }
