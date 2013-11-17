@@ -13,6 +13,8 @@ public class ItemManagement : MonoBehaviour {
 
 	private Dictionary<int, ItemEntity> localItemStore = new Dictionary<int, ItemEntity>();
 
+	//Editor debug purposes, so we can debug issues in the editos
+	private List<ItemEntity> allItems = new List<ItemEntity>();
 
 	const string ITEM_URL = Config.BASE_URL + "/item.fetch.php";
 
@@ -45,7 +47,7 @@ public class ItemManagement : MonoBehaviour {
 			string merchantName = j.GetField("storename").str;
 			string name = j.GetField("name").str;
 			string description = j.GetField("description").str;
-			string photoURL = j.GetField("photo").str;
+			string photoURL = WWW.UnEscapeURL(j.GetField("photo").str);
 			string modelURL = j.GetField("model").str;
 			string price = j.GetField("price").str;
 
@@ -54,12 +56,14 @@ public class ItemManagement : MonoBehaviour {
 			float floatPrice = System.Single.Parse(price);
 			int intPrice = (int)(100*floatPrice);
 
-
+			Debug.Log(photoURL);
+			PhotoManager.Instance.LoadImage(intId, photoURL);
 
 			ItemEntity item = new ItemEntity(
 				intId, name, description, photoURL, modelURL, intPrice, intMerchantID, merchantName
 			);
 			localItemStore.Add(intId, item);
+			allItems.Add(item);
 			// Debug.Log(j.list);
 			// Debug.Log(j.HasField("id_u"));
 			//name,photo,model,description,price
