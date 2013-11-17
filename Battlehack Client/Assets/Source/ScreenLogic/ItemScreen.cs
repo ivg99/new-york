@@ -136,6 +136,7 @@ public class ItemScreen : ApplicationScreen {
 				}
 			}
 			else{
+				UpdateScrollers();
 				if(Input.GetKey(KeyCode.Mouse0)){
 					Ray ray = customizerCamera.ScreenPointToRay(Input.mousePosition);
 					 RaycastHit hit;
@@ -193,6 +194,87 @@ public class ItemScreen : ApplicationScreen {
 		yaw = Smoothing.SpringSmooth(yaw, targetYaw, ref yawVelocity, 0.2f, Time.deltaTime);
 		cameraParent.rotation = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(pitch, Vector3.right);
 	}
+
+	void InitializeScrollers(){
+		
+	}
+
+	void UpdateScrollers(){
+		if(objCache[entity.Id] != null){
+			Transform t = GetSelectedParameter(objCache[entity.Id].transform);
+			if(t != null){
+			int idx =0;
+			//Vector3 position = t.position;
+			//Vector3 scale = t.localScale;
+			if(entity.Parameters[selectedParameter].translate_x){
+				
+				float x = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].translate_x_min + scrollers[idx].Value*entity.Parameters[selectedParameter].translate_x_max;
+				t.position = new Vector3(x,t.position.y, t.position.z);
+				//custom[idx].Text = "Move X";
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].translate_y){
+				float y = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].translate_y_min + scrollers[idx].Value*entity.Parameters[selectedParameter].translate_y_max;
+				t.position = new Vector3(t.position.x,y, t.position.z);
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].translate_z){
+				float z = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].translate_z_min + scrollers[idx].Value*entity.Parameters[selectedParameter].translate_z_max;
+				t.position = new Vector3(t.position.x, t.position.y,z);
+				idx++;
+			}
+
+			if(entity.Parameters[selectedParameter].rotate_x){
+				//custom[idx].Text = "Rotate X";
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].rotate_y){
+				//custom[idx].Text = "Rotate Y";
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].rotate_z){
+				//custom[idx].Text = "Rotate Z";
+				idx++;
+			}
+
+			if(entity.Parameters[selectedParameter].scale_x){
+				float x = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].scale_x_min + scrollers[idx].Value*entity.Parameters[selectedParameter].scale_x_max;
+				t.localScale = new Vector3(x, t.localScale.y, t.localScale.z);
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].scale_y){
+				float y = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].scale_y_min + scrollers[idx].Value*entity.Parameters[selectedParameter].scale_y_max;
+				t.localScale = new Vector3(t.localScale.x, y, t.localScale.z);
+				idx++;
+			}
+			if(entity.Parameters[selectedParameter].scale_z){
+				float z = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].scale_z_min + scrollers[idx].Value*entity.Parameters[selectedParameter].scale_z_max;
+				t.localScale = new Vector3(t.localScale.x, t.localScale.y,z);
+				idx++;
+			}
+		}
+		}
+	}
+
+
+	Transform GetSelectedParameter(Transform trans){
+		foreach(Transform t in trans){
+			// Debug.Log(t.name + " : " + entity.Parameters[selectedParameter].name);
+			if(t.name == entity.Parameters[selectedParameter].name){
+
+				return t;
+			}
+			else{
+				Transform tr =  GetSelectedParameter(t);
+				if(tr != null){
+					return tr;
+				}
+			}
+		}
+		return null;
+	}
+
+
 	Color baseColor = new Color(1,1,1,1);
 	Color selectColor = new Color(0.7f,0.68f,1,1);
 	void SetObjectColors(Transform trans){
@@ -250,10 +332,10 @@ public class ItemScreen : ApplicationScreen {
 			custom[idx].Text = "Scale Z";
 			idx++;
 		}
-		Debug.Log(idx);
+		// Debug.Log(idx);
 		for(int i=0; i<4; i++){
 			if(idx <= i){
-				Debug.Log(custom[idx].name);
+				// Debug.Log(custom[idx].name);
 				custom[i].Transparency = 0;
 			}
 			else{
