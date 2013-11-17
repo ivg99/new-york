@@ -74,7 +74,7 @@ public class HomeScreen : ApplicationScreen {
 	 void ScanComplete(int idx){
 		ScanNormal();
 		#if UNITY_EDITOR
-			LoadItem(9);
+			LoadItem(63);
 		#else
 			EasyCodeScanner.launchScanner( true, "Scanning...", -1, true);
 		#endif

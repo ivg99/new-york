@@ -77,7 +77,9 @@ public class ItemScreen : ApplicationScreen {
 	[SerializeField] UITextNode[] custom;
 	[SerializeField] AttributeScroll[] scrollers;
 
-	[SerializeField] GameObject[] objCache;
+	[SerializeField] MeshCache[] objCache;
+	GameObject currentObject;
+
 
 	int selectedParameter = 0;
 
@@ -160,8 +162,9 @@ public class ItemScreen : ApplicationScreen {
 					if(downParam != -1){
 
 						selectedParameter = downParam;
-	        			if(objCache[entity.Id] != null){
-	        				SetObjectColors(objCache[entity.Id].transform);
+
+	        			if(currentObject != null){
+	        				SetObjectColors(currentObject.transform);
 	        			}
 	        			downParam = -1;
 					}
@@ -196,8 +199,8 @@ public class ItemScreen : ApplicationScreen {
 	}
 
 	void InitializeScrollers(){
-		if(objCache[entity.Id] != null){
-			Transform t = GetSelectedParameter(objCache[entity.Id].transform);
+		if(currentObject != null){
+			Transform t = GetSelectedParameter(currentObject.transform);
 			if(t != null){
 			int idx =0;
 			//Vector3 position = t.position;
@@ -205,47 +208,50 @@ public class ItemScreen : ApplicationScreen {
 			if(entity.Parameters[selectedParameter].translate_x){
 				
 				float range = entity.Parameters[selectedParameter].translate_x_max - entity.Parameters[selectedParameter].translate_x_min;
-				scrollers[idx].Value = (t.position.x - entity.Parameters[selectedParameter].translate_x_min)/range;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localPosition.x - entity.Parameters[selectedParameter].translate_x_min)/range;
 				//custom[idx].Text = "Move X";
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].translate_y){
 				float range = entity.Parameters[selectedParameter].translate_y_max - entity.Parameters[selectedParameter].translate_y_min;
-				scrollers[idx].Value = (t.position.y - entity.Parameters[selectedParameter].translate_y_min)/range;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localPosition.y - entity.Parameters[selectedParameter].translate_y_min)/range;
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].translate_z){
 				float range = entity.Parameters[selectedParameter].translate_z_max - entity.Parameters[selectedParameter].translate_z_min;
-				scrollers[idx].Value = (t.position.z - entity.Parameters[selectedParameter].translate_z_min)/range;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localPosition.z - entity.Parameters[selectedParameter].translate_z_min)/range;
 				idx++;
 			}
 
 			if(entity.Parameters[selectedParameter].rotate_x){
-				//custom[idx].Text = "Rotate X";
+				float range = entity.Parameters[selectedParameter].rotate_x_max - entity.Parameters[selectedParameter].rotate_x_min;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localEulerAngles.x - entity.Parameters[selectedParameter].rotate_x_min)/range;
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].rotate_y){
-				//custom[idx].Text = "Rotate Y";
+				float range = entity.Parameters[selectedParameter].rotate_y_max - entity.Parameters[selectedParameter].rotate_y_min;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localEulerAngles.y - entity.Parameters[selectedParameter].rotate_y_min)/range;
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].rotate_z){
-				//custom[idx].Text = "Rotate Z";
+				float range = entity.Parameters[selectedParameter].rotate_z_max - entity.Parameters[selectedParameter].rotate_z_min;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localEulerAngles.z - entity.Parameters[selectedParameter].rotate_z_min)/range;
 				idx++;
 			}
 
 			if(entity.Parameters[selectedParameter].scale_x){
 				float range = entity.Parameters[selectedParameter].scale_x_max - entity.Parameters[selectedParameter].scale_x_min;
-				scrollers[idx].Value = (t.localScale.x - entity.Parameters[selectedParameter].scale_x_min)/range;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localScale.x - entity.Parameters[selectedParameter].scale_x_min)/range;
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].scale_y){
 				float range = entity.Parameters[selectedParameter].scale_y_max - entity.Parameters[selectedParameter].scale_y_min;
-				scrollers[idx].Value = (t.localScale.y - entity.Parameters[selectedParameter].scale_y_min)/range;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localScale.y - entity.Parameters[selectedParameter].scale_y_min)/range;
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].scale_z){
 				float range = entity.Parameters[selectedParameter].scale_z_max - entity.Parameters[selectedParameter].scale_z_min;
-				scrollers[idx].Value = (t.localScale.z - entity.Parameters[selectedParameter].scale_z_min)/range;
+				scrollers[idx].Value = Mathf.Sign(range)*(t.localScale.z - entity.Parameters[selectedParameter].scale_z_min)/range;
 				idx++;
 			}
 		}
@@ -253,8 +259,8 @@ public class ItemScreen : ApplicationScreen {
 	}
 
 	void UpdateScrollers(){
-		if(objCache[entity.Id] != null){
-			Transform t = GetSelectedParameter(objCache[entity.Id].transform);
+		if(currentObject != null){
+			Transform t = GetSelectedParameter(currentObject.transform);
 			if(t != null){
 			int idx =0;
 			//Vector3 position = t.position;
@@ -262,31 +268,35 @@ public class ItemScreen : ApplicationScreen {
 			if(entity.Parameters[selectedParameter].translate_x){
 				
 				float x = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].translate_x_min + scrollers[idx].Value*entity.Parameters[selectedParameter].translate_x_max;
-				t.position = new Vector3(x,t.position.y, t.position.z);
+				t.localPosition = new Vector3(x,t.localPosition.y, t.localPosition.z);
 				//custom[idx].Text = "Move X";
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].translate_y){
 				float y = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].translate_y_min + scrollers[idx].Value*entity.Parameters[selectedParameter].translate_y_max;
-				t.position = new Vector3(t.position.x,y, t.position.z);
+				t.localPosition = new Vector3(t.localPosition.x,y, t.localPosition.z);
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].translate_z){
 				float z = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].translate_z_min + scrollers[idx].Value*entity.Parameters[selectedParameter].translate_z_max;
-				t.position = new Vector3(t.position.x, t.position.y,z);
+				t.localPosition = new Vector3(t.localPosition.x, t.localPosition.y,z);
 				idx++;
 			}
 
 			if(entity.Parameters[selectedParameter].rotate_x){
-				//custom[idx].Text = "Rotate X";
+				float x = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].rotate_x_min + scrollers[idx].Value*entity.Parameters[selectedParameter].rotate_x_max;
+				t.localEulerAngles = new Vector3(x,t.localEulerAngles.y, t.localEulerAngles.z);
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].rotate_y){
-				//custom[idx].Text = "Rotate Y";
+				float y = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].rotate_y_min + scrollers[idx].Value*entity.Parameters[selectedParameter].rotate_y_max;
+				t.localEulerAngles = new Vector3(t.localEulerAngles.x,y, t.localEulerAngles.z);
+				
 				idx++;
 			}
 			if(entity.Parameters[selectedParameter].rotate_z){
-				//custom[idx].Text = "Rotate Z";
+				float z = (1-scrollers[idx].Value)*entity.Parameters[selectedParameter].rotate_z_min + scrollers[idx].Value*entity.Parameters[selectedParameter].rotate_z_max;
+				t.localEulerAngles = new Vector3(t.localEulerAngles.x,t.localEulerAngles.y,z);
 				idx++;
 			}
 
@@ -405,16 +415,26 @@ public class ItemScreen : ApplicationScreen {
 		PhotoManager.Instance.LoadImage(entity.Id, entity.PhotoLargeURL);
 
 		//oh god haxxxxx
-		if(entity.Id < objCache.Length){
-			objCache[entity.Id].SetActive(true);
-		}
+		currentObject = null;
 		for(int i=0; i<objCache.Length; i++){
-			if(i != entity.Id){
-				if(objCache[i] != null){
-					objCache[i].SetActive(false);
-				}
+			if(entity.Id == objCache[i].id){
+				currentObject = objCache[i].gameObject;
 			}
+			objCache[i].gameObject.SetActive(false);
 		}
+		if(currentObject != null){
+			currentObject.SetActive(true);
+		}
+		// if(entity.Id < objCache.Length){
+		// 	objCache[entity.Id].SetActive(true);
+		// }
+		// for(int i=0; i<objCache.Length; i++){
+		// 	if(i != entity.Id){
+		// 		if(objCache[i] != null){
+		// 			objCache[i].SetActive(false);
+		// 		}
+		// 	}
+		// }
 
 		for(int i=0; i<entity.Parameters.Count; i++){
 			if(i==0){
@@ -439,8 +459,8 @@ public class ItemScreen : ApplicationScreen {
 		if(entity.Parameters.Count < 1){
 			parameterOne.gameObject.SetActive(false);
 		}
-		if(objCache[entity.Id] != null){
-			SetObjectColors(objCache[entity.Id].transform);
+		if(currentObject != null){
+			SetObjectColors(currentObject.transform);
 		}
 		//StartCoroutine(LoadModel());
 		Debug.Log("hell yeah");
@@ -466,4 +486,10 @@ public class ItemScreen : ApplicationScreen {
 		yield return 0;
 	}
 
+}
+
+[System.Serializable]
+public class MeshCache{
+	public int id;
+	public GameObject gameObject;
 }
