@@ -14,7 +14,7 @@ if($submitted==1){
 	
 	$json['id_i']='"'.$id_i.'"';
 	
-	echo json_encode($json);
+	echo stripslashes(json_encode($json));
 	
 }else{
 ?>

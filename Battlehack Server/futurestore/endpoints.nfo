@@ -11,4 +11,11 @@
 /image.resizer.php I:(x,y,imageurl) O:(image url)
 
 /parameters.add.php I:(id_i,param_name,translate,rotate,scale,color) O:(id_p)
-/parameters.fetch.php I:id_i O:(json params)
+/parameters.fetch.php?output=1 I:id_i O:(json params) [included in item.fetch.php can also be called by itself]
+
+/cc.issuer.php I:(cc#) o:(issuer - examples: VISA, MasterCard, Discover, AmEx) 
+/paypal.vault.add.php I:(type,number,expire_month,expire_year,first_name,last_name) o:(json - error_count:0,id_cc OR error_count:>0,errors: string array)
+/paypal.vault.lookup.php I:(ccid) O: expired or ok
+/paypal.pay.php I:(ccid,price) O:success
+
+
