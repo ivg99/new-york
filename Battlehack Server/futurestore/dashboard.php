@@ -23,10 +23,10 @@ while($row = mysql_fetch_array($result)){
 	if( $row['name']!="") { ?>
 <tr>
 <td>
-<a href="#"><img src="<?php echo $row['photo_thumb'] ?>" /></a>
+<a href="/item.edit.php?id=<?php echo $row['id_i']?>"><img src="<?php echo $row['photo_thumb'] ?>" /></a>
 </td>
 <td>
-<a href="#"><h2><?php echo $row['name'] ?></h2></a><?php echo $row['description'] ?>
+<a href="/item.edit.php?id=<?php echo $row['id_i']?>"><h2><?php echo $row['name'] ?></h2></a><?php echo $row['description'] ?>
 </td>
 </tr>  
 	<?php $count++;

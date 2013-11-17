@@ -3,7 +3,7 @@
 
 if($submitted==1){
 
-	$query = mins('merchantinfo',array('idu_mi','info','icon'),array($id_u,$info,$icon));
+	$query = mins('merchantinfo',array('idu_mi','storename','info','icon'),array($id_u,$storename,$info,$icon));
 	mquery($query);
 	$id_mi = mysql_insert_id();
 	

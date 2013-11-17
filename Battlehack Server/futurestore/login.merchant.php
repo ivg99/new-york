@@ -20,7 +20,7 @@ if($submitted==1){
 		if($included!=1){
 		$json['id_mi'] = $id_mi;
 		echo json_encode($json);
-		}
+		}else $_SESSION['id_mi'] = $id_mi;
 	}else{ if($included!=1)echo 'DNE';
 			else header('Location: /registermerchant');
 	}

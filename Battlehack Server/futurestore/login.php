@@ -13,6 +13,7 @@ if($submitted==1){
 	
 	while($row = mysql_fetch_assoc($result)){
 		
+		$username = $row['username'];
 		$id = $row['id_u'];
 	
 	}

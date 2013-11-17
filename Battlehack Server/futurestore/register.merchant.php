@@ -10,7 +10,7 @@ if($submitted==1){
 	$info = $_REQUEST['info'];
 	$icon = $_REQUEST['icon'];
 	
-	$query = mins('merchantinfo',array('idu_mi','info','icon'),array($id_u,$info,$icon)); 
+	$query = mins('merchantinfo',array('idu_mi','storename','info','icon'),array($id_u,$name,$info,$icon)); 
 	mquery($query);
 	
 	$id_mi = mysql_insert_id();
@@ -37,8 +37,8 @@ if($submitted==1){
 <div class="col-md-4">              
   <div class="form-group">
     <label for="icon">Icon (reload for a different one)</label>
-	  
-      <input type="hidden" class="form-control" id="icon" name="icon"><br /> <img src="http://www.gravatar.com/avatar/100?s=256&d=identicon" />	
+	  <?php $urlgravatar='http://www.gravatar.com/avatar/'.rand(1,100).'?s=256&d=identicon' ?>
+      <input type="hidden" class="form-control" id="icon" name="icon" value="<?php echo $urlgravatar; ?>><br /> <img src="<?php echo $urlgravatar; ?>" />	
     </label>
   </div>              
 </div>
