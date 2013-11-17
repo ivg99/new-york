@@ -3,9 +3,15 @@ using System.Collections;
 
 public class ItemScreen : ApplicationScreen {
 
-	public override void Activate(bool immediate){
-		base.Activate(immediate);
+	public override void Activate(bool immediate, int startPoint){
+		base.Activate(immediate, startPoint);
 		gameObject.SetActive(true);
+		for(int i=0; i<4; i++){
+			
+				
+				custom[i].Transparency = 0;
+
+		}
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(0, 0);
 			//SetCameraX(0);
@@ -14,15 +20,15 @@ public class ItemScreen : ApplicationScreen {
 		else{
 			time = 0;
 			uiTransform.RelativePosition = new Vector2(1, 0);
-			xStart = 1;
+			xStart = startPoint;
 			xTarget = 0;
 			animating = true;
 			activating = true;
 		}
 	}
 
-	public override void Deactivate(bool immediate){
-		base.Deactivate(immediate);
+	public override void Deactivate(bool immediate, int endPoint){
+		base.Deactivate(immediate, endPoint);
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(0, 0);
 			gameObject.SetActive(false);
@@ -31,7 +37,7 @@ public class ItemScreen : ApplicationScreen {
 		else{
 			time = 0;
 			xStart = 0;
-			xTarget = 1;
+			xTarget = endPoint;
 			animating = true;
 			activating = false;
 		}
@@ -53,6 +59,7 @@ public class ItemScreen : ApplicationScreen {
 	bool animating = false;
 	bool activating = false;
 
+	[SerializeField] UITapGestureRecognizer buy;
 	[SerializeField] UITapGestureRecognizer back;
 	[SerializeField] UIScrollGestureRecognizer scroller;
 	[SerializeField] Camera customizerCamera;
@@ -66,6 +73,9 @@ public class ItemScreen : ApplicationScreen {
 	[SerializeField] UITextNode parameterOne;
 	[SerializeField] UITextNode parameterTwo;
 	[SerializeField] UITextNode parameterThree;
+
+	[SerializeField] UITextNode[] custom;
+	[SerializeField] AttributeScroll[] scrollers;
 
 	[SerializeField] GameObject[] objCache;
 
@@ -91,6 +101,13 @@ public class ItemScreen : ApplicationScreen {
 		
 		back.OnGestureRecognized += Home;
 		scroller.OnGestureChanged += Scroll;
+		buy.OnGestureRecognized += Buy;
+	}
+
+	void Buy(int idx){
+		if(entity != null){
+			StateMachine.Instance.Checkout(1);
+		}
 	}
 
 	void Scroll(int idx){
@@ -104,7 +121,7 @@ public class ItemScreen : ApplicationScreen {
 
 	void Home(int idx){
 		
-		StateMachine.Instance.GotoHomeScreen();
+		StateMachine.Instance.GotoHomeScreen(-1);
 
 	}
 
@@ -189,6 +206,59 @@ public class ItemScreen : ApplicationScreen {
 				t.gameObject.renderer.material.color = baseColor;
 			}
 			SetObjectColors(t);
+		}
+		SetupSliders();
+	}
+
+	void SetupSliders(){
+		int idx =0;
+		if(entity.Parameters[selectedParameter].translate_x){
+			custom[idx].Text = "Move X";
+			idx++;
+		}
+		if(entity.Parameters[selectedParameter].translate_y){
+			custom[idx].Text = "Move Y";
+			idx++;
+		}
+		if(entity.Parameters[selectedParameter].translate_z){
+			custom[idx].Text = "Move Z";
+			idx++;
+		}
+
+		if(entity.Parameters[selectedParameter].rotate_x){
+			custom[idx].Text = "Rotate X";
+			idx++;
+		}
+		if(entity.Parameters[selectedParameter].rotate_y){
+			custom[idx].Text = "Rotate Y";
+			idx++;
+		}
+		if(entity.Parameters[selectedParameter].rotate_z){
+			custom[idx].Text = "Rotate Z";
+			idx++;
+		}
+
+		if(entity.Parameters[selectedParameter].scale_x){
+			custom[idx].Text = "Scale X";
+			idx++;
+		}
+		if(entity.Parameters[selectedParameter].scale_y){
+			custom[idx].Text = "Scale Y";
+			idx++;
+		}
+		if(entity.Parameters[selectedParameter].scale_z){
+			custom[idx].Text = "Scale Z";
+			idx++;
+		}
+		Debug.Log(idx);
+		for(int i=0; i<4; i++){
+			if(idx <= i){
+				Debug.Log(custom[idx].name);
+				custom[i].Transparency = 0;
+			}
+			else{
+				custom[i].Transparency = 1;
+			}
 		}
 	}
 

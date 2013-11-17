@@ -19,41 +19,41 @@ public class StateMachine : MonoBehaviour {
 	}
 
 	void Start(){
-		GotoHomeScreen(true);
+		GotoHomeScreen(1, true);
 	}
 
 	public void LoadItem(int itemID){
 		ItemManagement.Instance.GetItem(itemID);
 		itemScreen.SetItem(itemID);
-		GotoItemScreen();
+		GotoItemScreen(1);
 	}
 
-	void GotoItemScreen(bool immediate = false){
-		itemScreen.Activate(immediate);
-		loginScreen.Deactivate(immediate);
-		homeScreen.Deactivate(immediate);
-		checkoutScreen.Deactivate(immediate);
+	public void GotoItemScreen(int direction, bool immediate = false){
+		itemScreen.Activate(immediate, direction);
+		loginScreen.Deactivate(immediate,-direction);
+		homeScreen.Deactivate(immediate,-direction);
+		checkoutScreen.Deactivate(immediate,-direction);
 	}
 
-	public void GotoHomeScreen(bool immediate = false){
-		itemScreen.Deactivate(immediate);
-		loginScreen.Deactivate(immediate);
-		homeScreen.Activate(immediate);
-		checkoutScreen.Deactivate(immediate);
+	public void GotoHomeScreen(int direction,bool immediate = false){
+		itemScreen.Deactivate(immediate,-direction);
+		loginScreen.Deactivate(immediate,-direction);
+		homeScreen.Activate(immediate,direction);
+		checkoutScreen.Deactivate(immediate,-direction);
 	}
 
-	void GotoLoginScreen(bool immediate = false){
-		itemScreen.Deactivate(immediate);
-		loginScreen.Activate(immediate);
-		homeScreen.Deactivate(immediate);
-		checkoutScreen.Deactivate(immediate);
+	void GotoLoginScreen(int direction,bool immediate = false){
+		itemScreen.Deactivate(immediate,-direction);
+		loginScreen.Activate(immediate, direction);
+		homeScreen.Deactivate(immediate,-direction);
+		checkoutScreen.Deactivate(immediate,-direction);
 	}
 
-	public void Checkout(bool immediate = false){
-		itemScreen.Deactivate(immediate);
-		loginScreen.Deactivate(immediate);
-		homeScreen.Deactivate(immediate);
-		checkoutScreen.Activate(immediate);
+	public void Checkout(int direction,bool immediate = false){
+		itemScreen.Deactivate(immediate,-direction);
+		loginScreen.Deactivate(immediate,-direction);
+		homeScreen.Deactivate(immediate,-direction);
+		checkoutScreen.Activate(immediate,direction);
 	}
 
 

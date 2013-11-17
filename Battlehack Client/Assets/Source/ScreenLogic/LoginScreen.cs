@@ -3,15 +3,15 @@ using System.Collections;
 
 public class LoginScreen : ApplicationScreen {
 
-	public override void Activate(bool immediate){
-		base.Activate(immediate);
+	public override void Activate(bool immediate, int startPoint){
+		base.Activate(immediate, startPoint);
 		gameObject.SetActive(true);
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(0, 0);
 		}
 		else{
 			time = 0;
-			xStart = 1;
+			xStart = startPoint;
 			xTarget = 0;
 			animating = true;
 			activating = true;
@@ -19,9 +19,9 @@ public class LoginScreen : ApplicationScreen {
 		
 	}
 
-	public override void Deactivate(bool immediate){
+	public override void Deactivate(bool immediate, int endPoint){
 
-		base.Deactivate(immediate);
+		base.Deactivate(immediate, endPoint);
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(1, 0);
 			gameObject.SetActive(false);
@@ -29,7 +29,7 @@ public class LoginScreen : ApplicationScreen {
 		else{
 			time = 0;
 			xStart = 0;
-			xTarget = 1;
+			xTarget = endPoint;
 			animating = true;
 			activating = false;
 		}

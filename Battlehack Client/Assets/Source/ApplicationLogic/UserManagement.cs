@@ -86,6 +86,7 @@ public class UserManagement : MonoBehaviour {
 		loginStatus = LoginStatus.LoggingIn;
 		WWWForm loginForm = new WWWForm();
 		loginForm.AddField("username", username);
+		loginForm.AddField("unity", 1);
 		loginForm.AddField("password", password);
 		loginForm.AddField("submitted", 1);
 		WWW www = new WWW( LOGIN_URL, loginForm );

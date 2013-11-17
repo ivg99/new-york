@@ -5,15 +5,17 @@ public class CheckoutScreen : ApplicationScreen {
 
 
 
-	public override void Activate(bool immediate){
-		base.Activate(immediate);
+	public override void Activate(bool immediate, int startPoint){
+		base.Activate(immediate, startPoint);
 		gameObject.SetActive(true);
+		checkoutGroup.Transparency = 1;
+		successGroup.Transparency = 0;
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(0, 0);
 		}
 		else{
 			time = 0;
-			xStart = 1;
+			xStart = startPoint;
 			xTarget = 0;
 			animating = true;
 			activating = true;
@@ -21,9 +23,9 @@ public class CheckoutScreen : ApplicationScreen {
 		
 	}
 
-	public override void Deactivate(bool immediate){
+	public override void Deactivate(bool immediate, int endPoint){
 
-		base.Deactivate(immediate);
+		base.Deactivate(immediate, endPoint);
 		if(immediate){
 			uiTransform.RelativePosition = new Vector2(1, 0);
 			gameObject.SetActive(false);
@@ -31,12 +33,16 @@ public class CheckoutScreen : ApplicationScreen {
 		else{
 			time = 0;
 			xStart = 0;
-			xTarget = 1;
+			xTarget = endPoint;
 			animating = true;
 			activating = false;
 		}
 	}
 
+	[SerializeField] UITransformNode checkoutGroup;
+	[SerializeField] UITransformNode successGroup;
+
+	[SerializeField] UITapGestureRecognizer back;
 	[SerializeField] UITapGestureRecognizer sendPayment;
 	[SerializeField] UITapGestureRecognizer firstNameBtn;
 	[SerializeField] UITapGestureRecognizer lastNameBtn;
@@ -53,6 +59,7 @@ public class CheckoutScreen : ApplicationScreen {
 	[SerializeField] UITextNode expMonth;
 	[SerializeField] UITextNode expYear;
 	[SerializeField] UITextNode cvv;
+	[SerializeField] UITextNode type;
 
 	float xStart;
 	float xTarget;
@@ -61,6 +68,7 @@ public class CheckoutScreen : ApplicationScreen {
 	bool activating = false;
 
 	void Start(){
+		back.OnGestureRecognized += Back;
 		firstNameBtn.OnGestureRecognized += First;
 		lastNameBtn.OnGestureRecognized += Last;
 
@@ -77,19 +85,86 @@ public class CheckoutScreen : ApplicationScreen {
 	private string[] texts = new string[6];
 
 
-	void Send(int idx){
+	void Back(int idx){
+		StateMachine.Instance.GotoItemScreen(-1);
+	}
 
+	void Send(int idx){
+		StartCoroutine(GetIssuer());
 	}
 	const string ADD_URL = Config.BASE_URL + "/paypal.vault.add.php";
 	const string ISSUER_URL = Config.BASE_URL + "/cc.issuer.php";
 	const string PAY_URL = Config.BASE_URL + "/paypal.pay.php";
 
-	IEnumerator Submit(){
+	
 
+	IEnumerator GetIssuer(){
+		WWWForm issuerForm = new WWWForm();
+		issuerForm.AddField("cc", texts[2]);
+		issuerForm.AddField("submitted", 1);
+		WWW www = new WWW( ISSUER_URL, issuerForm );
+		yield return www;
+		if(www.error != null){
+			Debug.Log("ERROR ON ISSUER: "+ www.error);
+		}
+		else{
+			string encodedString = www.data;
+			Debug.Log(encodedString);
+			JSONObject j = new JSONObject(encodedString);
+			string issuer = j.GetField("issuer").str;
+			type.Text = issuer;
+			StartCoroutine(Submit(issuer));
+		}
 		yield return 0;
 	}
 
-	IEnumerator GetIssuer(){
+	IEnumerator Submit(string issuerType){
+
+		WWWForm submitForm = new WWWForm();
+		submitForm.AddField("type", issuerType);
+		submitForm.AddField("number", texts[2]);
+		submitForm.AddField("expire_month", texts[3]);
+		submitForm.AddField("expire_year", texts[4]);
+		submitForm.AddField("first_name", texts[0]);
+		submitForm.AddField("last_name", texts[1]);
+		submitForm.AddField("cvv", texts[5]);
+		submitForm.AddField("submitted", 1);
+		WWW www = new WWW( ADD_URL, submitForm );
+		yield return www;
+		if(www.error != null){
+			Debug.Log("ERROR ON ADD CC: "+ www.error);
+		}
+		else{
+			string encodedString = www.data;
+			Debug.Log(encodedString);
+			JSONObject j = new JSONObject(encodedString);
+			string ccid = j.GetField("id_cc").str;
+
+			StartCoroutine(Pay(ccid));
+		}
+		yield return 0;
+	}
+
+	IEnumerator Pay(string ccidNumber){
+		WWWForm submitForm = new WWWForm();
+		submitForm.AddField("ccid", ccidNumber);
+		submitForm.AddField("price", "10");
+		submitForm.AddField("submitted", 1);
+		WWW www = new WWW( PAY_URL, submitForm );
+		yield return www;
+		if(www.error != null){
+			Debug.Log("ERROR ON PAY: "+ www.error);
+		}
+		else{
+			string encodedString = www.data;
+			Debug.Log(encodedString);
+			JSONObject j = new JSONObject(encodedString);
+			string status = j.GetField("status").str;
+			string id = j.GetField("id").str;
+			Debug.Log(status + " : " + id);
+			checkoutGroup.Transparency = 0;
+			successGroup.Transparency = 1;
+		}
 		yield return 0;
 	}
 
