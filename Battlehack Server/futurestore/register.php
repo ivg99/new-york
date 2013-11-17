@@ -12,7 +12,7 @@ if($submitted==1){
 	$query = mins('users',array('username','password','email'),array($u,$p,$e)); 
 	mquery($query);
 	
-	$json['id_u'] = mysql_insert_id();
+	$json['id_u'] = (string)mysql_insert_id();
 	echo json_encode($json);
 	
 }else{
