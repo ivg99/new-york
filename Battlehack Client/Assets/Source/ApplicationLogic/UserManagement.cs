@@ -33,16 +33,17 @@ public class UserManagement : MonoBehaviour {
 	const string USERNAME_KEY = "USERNAME";
 	const string PASSWORD_KEY = "PASSWORD";
 
-	const string BASE_URL = "http://futurestore.areality3d.com";
-	const string LOGIN_URL = BASE_URL + "/login.php";
-	const string REGISTER_URL = BASE_URL + "/register.php";
+	
+	const string LOGIN_URL = Config.BASE_URL + "/login.php";
+	const string REGISTER_URL = Config.BASE_URL + "/register.php";
+	
 	void Awake(){
 		instance = this;
 
 		GetStoredInfo();
 
-		// Login("alpha", "abcdefg");
-		CreateNewUser("birdimus3","123456","brian.kehrer@gmail.com");
+		Login("alpha", "abcdefg");
+		// CreateNewUser("birdimus3","123456","brian.kehrer@gmail.com");
 	}
 
 	void GetStoredInfo(){

@@ -9,7 +9,7 @@ if($submitted==1){
 	$info = $_REQUEST['info'];
 	$icon = $_REQUEST['icon'];
 	
-	$query = mins('merchantinfo',array('idu_mi','info','icon'),array($id_u,$info,$icon)); 
+	$query = mins('merchantinfo',array('id_u','info','icon'),array($id_u,$info,$icon)); 
 	mquery($query);
 	
 	$json['id_mi'] = mysql_insert_id();
