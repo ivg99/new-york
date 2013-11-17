@@ -302,7 +302,7 @@ public abstract class UIGestureRecognizer : MonoBehaviour {
 		for(int i=0; i<recognizers.Count; i++){
 
 			if(activeGesture != null && activeGesture != recognizers[i] && !recognizers[i].AllowSimultaneousRecognition){
-				Debug.Log(activeGesture);
+				// Debug.Log(activeGesture);
 				recognizers[i].OverrideGesture();
 			}
 

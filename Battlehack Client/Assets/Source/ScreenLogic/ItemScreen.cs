@@ -97,6 +97,8 @@ public class ItemScreen : ApplicationScreen {
 		targetYaw = (targetYaw + 0.4f*scroller.RawScrollAmount.x);
 		targetPitch = Mathf.Clamp(targetPitch + 0.3f*scroller.RawScrollAmount.y,-89,89);
 
+		//invalidate button presses
+		downParam = -1;
 
 	}
 
@@ -105,6 +107,8 @@ public class ItemScreen : ApplicationScreen {
 		StateMachine.Instance.GotoHomeScreen();
 
 	}
+
+	int downParam =-1;
 
 	void Update(){
 		if(activated){
@@ -115,26 +119,36 @@ public class ItemScreen : ApplicationScreen {
 				}
 			}
 			else{
+				if(Input.GetKey(KeyCode.Mouse0)){
+					Ray ray = customizerCamera.ScreenPointToRay(Input.mousePosition);
+					 RaycastHit hit;
+				    if(Physics.Raycast(ray, out hit, 100)){
+				        string name = hit.collider.name;
+				        for(int i=0; i<entity.Parameters.Count; i++){
+				        	if(name == entity.Parameters[i].name){
+				        		if(i < 4){
+				        			downParam = i;
+				        			
+				        			// hit.collider.gameObject.renderer.material.color = new Color(1,1,0.5f,1);
+				        		}
+				        		
+				        		
+				        	}
+				        }
+				        
+				    }
+				}
+				else{
+					if(downParam != -1){
 
-				Ray ray = customizerCamera.ScreenPointToRay(Input.mousePosition);
-				 RaycastHit hit;
-			    if(Physics.Raycast(ray, out hit, 100)){
-			        string name = hit.collider.name;
-			        for(int i=0; i<entity.Parameters.Count; i++){
-			        	if(name == entity.Parameters[i].name){
-			        		if(i < 4){
-			        			selectedParameter = i;
-			        			if(objCache[entity.Id] != null){
-			        				SetObjectColors(objCache[entity.Id].transform);
-			        			}
-			        			// hit.collider.gameObject.renderer.material.color = new Color(1,1,0.5f,1);
-			        		}
-			        		
-			        		
-			        	}
-			        }
-			        
-			    }
+						selectedParameter = downParam;
+	        			if(objCache[entity.Id] != null){
+	        				SetObjectColors(objCache[entity.Id].transform);
+	        			}
+	        			downParam = -1;
+					}
+					
+				}
 				 if(icon.Texture == null){
 					icon.Texture = PhotoManager.Instance.GetImage(entity.Id);
 				}

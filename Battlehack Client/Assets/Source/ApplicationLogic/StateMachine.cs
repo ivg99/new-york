@@ -12,7 +12,7 @@ public class StateMachine : MonoBehaviour {
 	[SerializeField] ApplicationScreen homeScreen;
 	[SerializeField] ItemScreen itemScreen;
 	[SerializeField] ApplicationScreen loginScreen;
-
+	[SerializeField] CheckoutScreen checkoutScreen;
 	void Awake(){
 		instance = this;
 		
@@ -32,18 +32,28 @@ public class StateMachine : MonoBehaviour {
 		itemScreen.Activate(immediate);
 		loginScreen.Deactivate(immediate);
 		homeScreen.Deactivate(immediate);
+		checkoutScreen.Deactivate(immediate);
 	}
 
 	public void GotoHomeScreen(bool immediate = false){
 		itemScreen.Deactivate(immediate);
 		loginScreen.Deactivate(immediate);
 		homeScreen.Activate(immediate);
+		checkoutScreen.Deactivate(immediate);
 	}
 
 	void GotoLoginScreen(bool immediate = false){
 		itemScreen.Deactivate(immediate);
 		loginScreen.Activate(immediate);
 		homeScreen.Deactivate(immediate);
+		checkoutScreen.Deactivate(immediate);
+	}
+
+	public void Checkout(bool immediate = false){
+		itemScreen.Deactivate(immediate);
+		loginScreen.Deactivate(immediate);
+		homeScreen.Deactivate(immediate);
+		checkoutScreen.Activate(immediate);
 	}
 
 
